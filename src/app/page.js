@@ -1,10 +1,31 @@
-'use client'
+'use client';
 // import Image from 'next/image'
 import style from './Home.module.css';
-import {useRef} from 'react';
+import {useState, useEffect} from 'react';
 
 export default function Home() {
-  const {innerWidth: width, innerHeight: height} = useRef([window.innerWidth, window.innerHeight]);
+  const useDeviceSize = () => {
+
+    const [width, setWidth] = useState(0)
+    const [height, setHeight] = useState(0)
+  
+    const handleWindowResize = () => {
+      setWidth(window.innerWidth);
+      setHeight(window.innerHeight);
+    }
+  
+    useEffect(() => {
+      // component is mounted and window is available
+      handleWindowResize();
+      window.addEventListener('resize', handleWindowResize);
+      // unsubscribe from the event on component unmount
+      return () => window.removeEventListener('resize', handleWindowResize);
+    }, []);
+  
+    return [width, height]
+  
+  };
+  const [innerWidth, innerHeight] = useDeviceSize();
   return (
     <main>
       <div className={style.container}>
